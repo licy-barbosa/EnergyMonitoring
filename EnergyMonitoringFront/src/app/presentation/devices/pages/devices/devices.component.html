@@ -1,0 +1,126 @@
+<div class="space-y-6 animate-fade-in relative h-full">
+    <div class="flex items-center justify-between">
+        <div>
+            <h1 class="text-2xl font-bold text-foreground">Equipos Eléctricos</h1>
+            <p class="text-muted-foreground mt-1">Administra tus dispositivos</p>
+        </div>
+        <button (click)="openModal()"
+            class="h-10 px-4 rounded-lg bg-primary text-primary-foreground font-semibold text-sm flex items-center gap-2 hover:opacity-90 transition-opacity">
+            <lucide-icon [name]="Plus" class="h-4 w-4"></lucide-icon> Agregar Equipo
+        </button>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        @for (dev of devices; track dev.id) {
+        <div
+            class="glass-card rounded-xl border border-border p-5 relative overflow-hidden group hover:border-primary/30 transition-colors">
+            <div class="flex items-start justify-between mb-3 relative z-10">
+                <div class="flex items-center gap-3">
+                    <div class="p-2 rounded-lg" [ngClass]="dev.status === 'active' ? 'bg-primary/10' : 'bg-muted'">
+                        <lucide-icon [name]="Cpu" class="h-4 w-4"
+                            [ngClass]="dev.status === 'active' ? 'text-primary' : 'text-muted-foreground'"></lucide-icon>
+                    </div>
+                    <div>
+                        <h3 class="font-semibold text-foreground text-sm">{{dev.name}}</h3>
+                        <div class="flex items-center gap-1 text-xs text-muted-foreground mt-0.5">
+                            <lucide-icon [name]="MapPin" class="h-3 w-3"></lucide-icon> {{dev.location}}
+                        </div>
+                    </div>
+                </div>
+                <span class="text-xs font-semibold px-2 py-0.5 rounded-full"
+                    [ngClass]="dev.status === 'active' ? 'bg-primary/10 text-primary' : 'bg-muted text-muted-foreground'">
+                    {{dev.status === 'active' ? 'Activo' : 'Inactivo'}}
+                </span>
+            </div>
+
+            <div class="flex items-center justify-between mt-4 pt-3 border-t border-border/50 relative z-10">
+                <div>
+                    <p class="text-xs text-muted-foreground">Potencia</p>
+                    <p class="font-bold text-foreground">{{dev.nominalPowerW}}W</p>
+                </div>
+                <div class="text-right">
+                    <p class="text-xs text-muted-foreground">Consumo/mes</p>
+                    <p class="font-bold text-accent">{{dev.expectedMonthlyKwh}} kWh</p>
+                </div>
+            </div>
+        </div>
+        }
+    </div>
+
+    <!-- Modal Overlay -->
+    @if (isModalOpen) {
+    <div
+        class="fixed inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur-sm animate-in fade-in duration-200">
+        <div
+            class="glass-card w-full max-w-md rounded-xl border border-border p-6 shadow-lg animate-in zoom-in-95 duration-200">
+            <div class="flex items-center justify-between mb-6">
+                <h2 class="text-xl font-bold text-foreground">Agregar Nuevo Equipo</h2>
+                <button (click)="closeModal()"
+                    class="p-2 rounded-lg hover:bg-muted transition-colors text-muted-foreground hover:text-foreground">
+                    <lucide-icon [name]="X" class="h-5 w-5"></lucide-icon>
+                </button>
+            </div>
+
+            <form [formGroup]="deviceForm" (ngSubmit)="onSubmit()" class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-foreground mb-1">Nombre del Equipo</label>
+                    <input type="text" formControlName="name" placeholder="Ej. Aire Acondicionado"
+                        class="w-full h-10 px-3 rounded-lg bg-background border border-input text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all placeholder:text-muted-foreground flex items-center">
+                    @if(deviceForm.get('name')?.invalid && deviceForm.get('name')?.touched) {
+                    <p class="text-xs text-destructive mt-1">El nombre es requerido.</p>
+                    }
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-foreground mb-1">Ubicación</label>
+                    <input type="text" formControlName="location" placeholder="Ej. Sala"
+                        class="w-full h-10 px-3 rounded-lg bg-background border border-input text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all placeholder:text-muted-foreground flex items-center">
+                    @if(deviceForm.get('location')?.invalid && deviceForm.get('location')?.touched) {
+                    <p class="text-xs text-destructive mt-1">La ubicación es requerida.</p>
+                    }
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-foreground mb-1">Potencia (W)</label>
+                        <input type="number" formControlName="nominalPowerW" placeholder="Ej. 1500"
+                            class="w-full h-10 px-3 rounded-lg bg-background border border-input text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all placeholder:text-muted-foreground flex items-center">
+                        @if(deviceForm.get('nominalPowerW')?.invalid && deviceForm.get('nominalPowerW')?.touched) {
+                        <p class="text-xs text-destructive mt-1">Potencia inválida.</p>
+                        }
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-foreground mb-1">Consumo/mes (kWh)</label>
+                        <input type="number" formControlName="expectedMonthlyKwh" placeholder="Ej. 180"
+                            class="w-full h-10 px-3 rounded-lg bg-background border border-input text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all placeholder:text-muted-foreground flex items-center">
+                        @if(deviceForm.get('expectedMonthlyKwh')?.invalid &&
+                        deviceForm.get('expectedMonthlyKwh')?.touched) {
+                        <p class="text-xs text-destructive mt-1">Consumo inválido.</p>
+                        }
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-foreground mb-1">Estado</label>
+                    <select formControlName="status"
+                        class="w-full h-10 px-3 rounded-lg bg-background border border-input text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all hover:bg-muted/50">
+                        <option value="active">Activo</option>
+                        <option value="inactive">Inactivo</option>
+                    </select>
+                </div>
+
+                <div class="flex justify-end gap-3 mt-6">
+                    <button type="button" (click)="closeModal()"
+                        class="h-10 px-4 rounded-lg bg-muted text-foreground font-semibold text-sm hover:opacity-90 transition-opacity">
+                        Cancelar
+                    </button>
+                    <button type="submit" [disabled]="deviceForm.invalid"
+                        class="h-10 px-4 rounded-lg bg-primary text-primary-foreground font-semibold text-sm hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed">
+                        Guardar Equipo
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    }
+</div>

@@ -1,0 +1,143 @@
+<div class="space-y-6 animate-fade-in">
+    <div>
+        <h1 class="text-2xl font-bold text-foreground">Costo CFE Estimado</h1>
+        <p class="text-muted-foreground mt-1">Estimación bimestral — {{est.period}}</p>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <!-- StatCard 1 -->
+        <div class="glass-card rounded-xl p-5 border border-border relative overflow-hidden group">
+            <div class="flex flex-col h-full relative z-10">
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-sm font-medium text-muted-foreground">Costo Estimado</span>
+                    <div class="p-2 rounded-lg bg-accent/10 text-accent">
+                        <lucide-icon [name]="DollarSign" class="h-5 w-5"></lucide-icon>
+                    </div>
+                </div>
+                <div class="flex items-baseline gap-1 mt-auto">
+                    <span class="text-2xl font-bold text-foreground">${{est.estimatedCostMXN | number:'1.2-2'}}</span>
+                    <span class="text-sm font-medium text-muted-foreground">MXN</span>
+                </div>
+            </div>
+            <div
+                class="absolute -right-4 -bottom-4 w-24 h-24 bg-accent/5 rounded-full blur-2xl group-hover:bg-accent/10 transition-colors">
+            </div>
+        </div>
+
+        <!-- StatCard 2 -->
+        <div class="glass-card rounded-xl p-5 border border-border relative overflow-hidden group">
+            <div class="flex flex-col h-full relative z-10">
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-sm font-medium text-muted-foreground">Consumo Total</span>
+                    <div class="p-2 rounded-lg bg-muted text-foreground">
+                        <lucide-icon [name]="Zap" class="h-5 w-5"></lucide-icon>
+                    </div>
+                </div>
+                <div class="flex items-baseline gap-1 mt-auto">
+                    <span class="text-2xl font-bold text-foreground">{{est.totalConsumptionKwh}}</span>
+                    <span class="text-sm font-medium text-muted-foreground">kWh</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- StatCard 3 -->
+        <div class="glass-card rounded-xl p-5 border border-border relative overflow-hidden group">
+            <div class="flex flex-col h-full relative z-10">
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-sm font-medium text-muted-foreground">Enviado a Red</span>
+                    <div class="p-2 rounded-lg bg-primary/10 text-primary">
+                        <lucide-icon [name]="ArrowUpRight" class="h-5 w-5"></lucide-icon>
+                    </div>
+                </div>
+                <div class="flex items-baseline gap-1 mt-auto">
+                    <span class="text-2xl font-bold text-foreground">{{est.energySentToGrid}}</span>
+                    <span class="text-sm font-medium text-muted-foreground">kWh</span>
+                </div>
+            </div>
+            <div
+                class="absolute -right-4 -bottom-4 w-24 h-24 bg-primary/5 rounded-full blur-2xl group-hover:bg-primary/10 transition-colors">
+            </div>
+        </div>
+
+        <!-- StatCard 4 -->
+        <div class="glass-card rounded-xl p-5 border border-border relative overflow-hidden group">
+            <div class="flex flex-col h-full relative z-10">
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-sm font-medium text-muted-foreground">Ahorro</span>
+                    <div class="p-2 rounded-lg bg-primary/10 text-primary">
+                        <lucide-icon [name]="TrendingDown" class="h-5 w-5"></lucide-icon>
+                    </div>
+                </div>
+                <div class="flex items-baseline gap-1 mt-auto">
+                    <span class="text-2xl font-bold text-foreground">{{est.savingsPercentage}}%</span>
+                </div>
+                <div class="flex items-center gap-1.5 mt-2">
+                    <span class="text-xs font-medium text-primary flex items-center">
+                        <lucide-icon [name]="TrendingDown" class="h-3 w-3 mr-0.5"></lucide-icon>
+                        {{est.savingsPercentage}}%
+                    </span>
+                    <span class="text-xs text-muted-foreground">Ahorro estimado</span>
+                </div>
+            </div>
+            <div
+                class="absolute -right-4 -bottom-4 w-24 h-24 bg-primary/5 rounded-full blur-2xl group-hover:bg-primary/10 transition-colors">
+            </div>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div class="glass-card rounded-xl p-6 border border-border animate-fade-in">
+            <h3 class="text-base font-semibold text-foreground mb-4">Distribución Energética</h3>
+            <div
+                class="h-[260px] w-full flex items-center justify-center bg-muted/20 rounded-lg border border-dashed border-border">
+                <div class="text-center">
+                    <lucide-icon [name]="Zap"
+                        class="h-8 w-8 text-muted-foreground mx-auto mb-2 opacity-50"></lucide-icon>
+                    <p class="text-muted-foreground">Gráfico de pastel próximamente</p>
+                </div>
+            </div>
+            <div class="flex justify-center gap-6 mt-4">
+                @for (d of pieData; track d.name) {
+                <div class="flex items-center gap-2">
+                    <div class="w-3 h-3 rounded-full" [style.backgroundColor]="d.color"></div>
+                    <span class="text-xs text-muted-foreground">{{d.name}}</span>
+                </div>
+                }
+            </div>
+        </div>
+
+        <div class="glass-card rounded-xl p-6 border border-border animate-fade-in">
+            <h3 class="text-base font-semibold text-foreground mb-6">Detalle del Período</h3>
+            <div class="space-y-5">
+                <div class="flex justify-between items-center pb-4 border-b border-border/50">
+                    <div class="flex items-center gap-3">
+                        <div class="p-2 rounded-lg bg-accent/10"><lucide-icon [name]="Zap"
+                                class="h-4 w-4 text-accent"></lucide-icon></div>
+                        <span class="text-sm text-foreground">Consumo total</span>
+                    </div>
+                    <span class="font-bold text-foreground">{{est.totalConsumptionKwh}} kWh</span>
+                </div>
+                <div class="flex justify-between items-center pb-4 border-b border-border/50">
+                    <div class="flex items-center gap-3">
+                        <div class="p-2 rounded-lg bg-primary/10"><lucide-icon [name]="ArrowUpRight"
+                                class="h-4 w-4 text-primary"></lucide-icon></div>
+                        <span class="text-sm text-foreground">Excedente enviado a red</span>
+                    </div>
+                    <span class="font-bold text-primary">{{est.energySentToGrid}} kWh</span>
+                </div>
+                <div class="flex justify-between items-center pb-4 border-b border-border/50">
+                    <div class="flex items-center gap-3">
+                        <div class="p-2 rounded-lg bg-accent/10"><lucide-icon [name]="ArrowDownRight"
+                                class="h-4 w-4 text-accent"></lucide-icon></div>
+                        <span class="text-sm text-foreground">Energía comprada CFE</span>
+                    </div>
+                    <span class="font-bold text-accent">{{est.energyPurchased}} kWh</span>
+                </div>
+                <div class="flex justify-between items-center pt-2">
+                    <span class="text-base font-semibold text-foreground">Total a pagar</span>
+                    <span class="text-2xl font-bold text-accent">${{est.estimatedCostMXN | number:'1.2-2'}} MXN</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

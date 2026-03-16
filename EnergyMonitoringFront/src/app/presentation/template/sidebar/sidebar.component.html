@@ -1,0 +1,75 @@
+<!-- Mobile toggle -->
+<button
+    (click)="openMobile()"
+    class="fixed top-4 left-4 z-50 lg:hidden rounded-lg bg-card p-2 border border-border">
+    <lucide-icon [name]="Menu" class="h-5 w-5 text-foreground"></lucide-icon>
+</button>
+
+<!-- Mobile overlay -->
+<div
+  *ngIf="mobileOpen"
+  class="fixed inset-0 z-40 bg-background/80 backdrop-blur-sm lg:hidden"
+  (click)="closeMobile()">
+</div>
+
+<!-- Sidebar -->
+<aside
+  class="fixed top-0 left-0 z-50 h-screen flex flex-col bg-sidebar border-r border-sidebar-border transition-all duration-300"
+  [ngClass]="{
+    'w-[72px]': collapsed,
+    'w-64': !collapsed,
+    'translate-x-0': mobileOpen,
+    '-translate-x-full lg:translate-x-0': !mobileOpen
+  }">
+  
+  <!-- Header -->
+  <div class="flex items-center gap-3 px-4 h-16 border-b border-sidebar-border">
+    <div class="flex items-center justify-center w-9 h-9 rounded-lg bg-primary/10">
+      <lucide-icon [name]="Zap" class="h-5 w-5 text-primary"></lucide-icon>
+    </div>
+    <span *ngIf="!collapsed" class="text-base font-bold text-foreground tracking-tight whitespace-nowrap">
+      EnergyMonitor
+    </span>
+    
+    <button
+      (click)="toggleCollapsed()"
+      class="ml-auto p-1 rounded hover:bg-sidebar-accent text-sidebar-foreground hidden lg:block">
+        <lucide-icon [name]="ChevronLeft" class="h-4 w-4 transition-transform" [class.rotate-180]="collapsed"></lucide-icon>
+    </button>
+    <button
+      (click)="closeMobile()"
+      class="ml-auto p-1 rounded hover:bg-sidebar-accent text-sidebar-foreground lg:hidden"
+    >
+      <lucide-icon [name]="X" class="h-4 w-4"></lucide-icon>
+    </button>
+  </div>
+
+  <!-- Nav -->
+  <nav class="flex-1 py-4 px-3 space-y-1 overflow-y-auto">
+    <a
+      *ngFor="let item of navItems"
+      [routerLink]="item.to"
+      (click)="closeMobile()"
+      class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-200"
+      [ngClass]="currentPath === item.to ? 'bg-primary/10 text-primary glow-primary' : 'text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground'"
+    >
+      <lucide-icon [name]="item.icon" class="h-5 w-5 flex-shrink-0" [class.text-primary]="currentPath === item.to"></lucide-icon>
+      <span *ngIf="!collapsed">{{ item.label }}</span>
+    </a>
+  </nav>
+
+  <!-- Footer -->
+  <div class="px-3 pb-4 border-t border-sidebar-border pt-4">
+    <div *ngIf="!collapsed && user" class="px-3 mb-3">
+      <p class="text-sm font-medium text-foreground truncate">{{ user.name || 'Usuario' }}</p>
+      <p class="text-xs text-muted-foreground truncate">{{ user.email || 'usuario@ejemplo.com' }}</p>
+    </div>
+    
+    <button
+      (click)="logout()"
+      class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-sidebar-foreground hover:bg-destructive/10 hover:text-destructive transition-colors w-full">
+      <lucide-icon [name]="LogOut" class="h-5 w-5 flex-shrink-0"></lucide-icon>
+      <span *ngIf="!collapsed">Cerrar sesión</span>
+    </button>
+  </div>
+</aside>

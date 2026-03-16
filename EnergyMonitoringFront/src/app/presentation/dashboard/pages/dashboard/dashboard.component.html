@@ -1,0 +1,128 @@
+<div class="space-y-8 animate-fade-in">
+    <!-- Header -->
+    <div>
+        <h1 class="text-2xl font-bold text-foreground">Dashboard</h1>
+        <p class="text-muted-foreground mt-1">Resumen de tu sistema de energía</p>
+    </div>
+
+    <!-- Stats Grid -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <!-- StatCard 1 -->
+        <div class="glass-card rounded-xl p-5 border border-border relative overflow-hidden group">
+            <div class="flex flex-col h-full relative z-10">
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-sm font-medium text-muted-foreground">Producción Total</span>
+                    <div class="p-2 rounded-lg bg-primary/10 text-primary">
+                        <lucide-icon [name]="Sun" class="h-5 w-5"></lucide-icon>
+                    </div>
+                </div>
+                <div class="flex items-baseline gap-1 mt-auto">
+                    <span class="text-2xl font-bold text-foreground">{{totalProduction}}</span>
+                    <span class="text-sm font-medium text-muted-foreground">kWh</span>
+                </div>
+                <div class="flex items-center gap-1.5 mt-2">
+                    <span class="text-xs font-medium text-primary">+12.5%</span>
+                    <span class="text-xs text-muted-foreground">Últimos 14 días</span>
+                </div>
+            </div>
+            <div
+                class="absolute -right-4 -bottom-4 w-24 h-24 bg-primary/5 rounded-full blur-2xl group-hover:bg-primary/10 transition-colors">
+            </div>
+        </div>
+
+        <!-- StatCard 2 -->
+        <div class="glass-card rounded-xl p-5 border border-border relative overflow-hidden group">
+            <div class="flex flex-col h-full relative z-10">
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-sm font-medium text-muted-foreground">Consumo Total</span>
+                    <div class="p-2 rounded-lg bg-accent/10 text-accent">
+                        <lucide-icon [name]="Zap" class="h-5 w-5"></lucide-icon>
+                    </div>
+                </div>
+                <div class="flex items-baseline gap-1 mt-auto">
+                    <span class="text-2xl font-bold text-foreground">{{totalConsumption}}</span>
+                    <span class="text-sm font-medium text-muted-foreground">kWh</span>
+                </div>
+                <div class="flex items-center gap-1.5 mt-2">
+                    <span class="text-xs font-medium text-destructive">-3.2%</span>
+                    <span class="text-xs text-muted-foreground">Últimos 14 días</span>
+                </div>
+            </div>
+            <div
+                class="absolute -right-4 -bottom-4 w-24 h-24 bg-accent/5 rounded-full blur-2xl group-hover:bg-accent/10 transition-colors">
+            </div>
+        </div>
+
+        <!-- StatCard 3 -->
+        <div class="glass-card rounded-xl p-5 border border-border relative overflow-hidden group">
+            <div class="flex flex-col h-full relative z-10">
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-sm font-medium text-muted-foreground">Ahorro Estimado</span>
+                    <div class="p-2 rounded-lg bg-primary/10 text-primary">
+                        <lucide-icon [name]="DollarSign" class="h-5 w-5"></lucide-icon>
+                    </div>
+                </div>
+                <div class="flex items-baseline gap-1 mt-auto">
+                    <span class="text-2xl font-bold text-foreground">${{savings | number:'1.0-0'}}</span>
+                    <span class="text-sm font-medium text-muted-foreground">MXN</span>
+                </div>
+                <div class="flex items-center gap-1.5 mt-2">
+                    <span class="text-xs font-medium text-primary">85%</span>
+                    <span class="text-xs text-muted-foreground text-nowrap">Periodo Actual</span>
+                </div>
+            </div>
+            <div
+                class="absolute -right-4 -bottom-4 w-24 h-24 bg-primary/5 rounded-full blur-2xl group-hover:bg-primary/10 transition-colors">
+            </div>
+        </div>
+
+        <!-- StatCard 4 -->
+        <div class="glass-card rounded-xl p-5 border border-border relative overflow-hidden group">
+            <div class="flex flex-col h-full relative z-10">
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-sm font-medium text-muted-foreground">Paneles Activos</span>
+                    <div class="p-2 rounded-lg bg-muted text-foreground">
+                        <lucide-icon [name]="TrendingUp" class="h-5 w-5"></lucide-icon>
+                    </div>
+                </div>
+                <div class="flex items-baseline gap-1 mt-auto">
+                    <span class="text-2xl font-bold text-foreground">{{activePanels}}</span>
+                    <span class="text-sm font-medium text-muted-foreground">paneles</span>
+                </div>
+                <div class="flex items-center gap-1.5 mt-2">
+                    <span class="text-xs text-muted-foreground">2 sistemas</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Charts Placeholder -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div class="lg:col-span-2 glass-card rounded-xl p-6 border border-border">
+            <h3 class="text-base font-semibold text-foreground mb-4">Generación vs Consumo</h3>
+            <div
+                class="h-[280px] w-full flex items-center justify-center bg-muted/20 rounded-lg border border-dashed border-border">
+                <p class="text-muted-foreground">Gráfico de área próximamente</p>
+            </div>
+        </div>
+        <div class="glass-card rounded-xl p-6 border border-border">
+            <h3 class="text-base font-semibold text-foreground mb-4">Balance Energético</h3>
+            <div class="space-y-4">
+                <div class="flex justify-between items-center">
+                    <span class="text-sm text-muted-foreground">Consumo total</span>
+                    <span class="text-sm font-semibold text-foreground">145 kWh</span>
+                </div>
+                <div class="w-full bg-muted rounded-full h-2">
+                    <div class="bg-accent h-2 rounded-full" style="width: 100%"></div>
+                </div>
+                <div class="flex justify-between items-center mt-4">
+                    <span class="text-sm text-muted-foreground">Enviado a red</span>
+                    <span class="text-sm font-semibold text-primary">120 kWh</span>
+                </div>
+                <div class="w-full bg-muted rounded-full h-2">
+                    <div class="bg-primary h-2 rounded-full" style="width: 80%"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

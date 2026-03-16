@@ -1,0 +1,61 @@
+import { routes } from './app.routes';
+import { APP_INFO } from '@core/config/app-info.token';
+import { ENVIRONMENT } from '@core/config/environment.token';
+import { MAT_FAB_DEFAULT_OPTIONS } from '@angular/material/button';
+import { provideRouter, withComponentInputBinding } from '@angular/router';
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
+import { provideHttpClient, withFetch, withInterceptors } from '@angular/common/http';
+import { authInterceptor } from './core/auth/interceptors/auth.interceptor';
+import { provideReadingsFeature } from './application/readings/readings.providers';
+import { SecurityService } from '@core/auth/services/security.service';
+import { SOLAR_PLANT_PROVIDERS } from '@infrastructure/solar-plant/solar-plant.provider';
+
+import {
+  ApplicationConfig,
+  provideZoneChangeDetection,
+  APP_INITIALIZER,
+} from '@angular/core';
+
+
+export const appConfig: ApplicationConfig = {
+    providers: [
+        provideZoneChangeDetection({ eventCoalescing: true }),
+        provideRouter(routes, withComponentInputBinding()),
+        provideAnimationsAsync(),
+
+        provideHttpClient(withFetch(), withInterceptors([authInterceptor])),
+
+        { provide: MAT_FAB_DEFAULT_OPTIONS, useValue: { subscriptSizing: 'dynamic' } },
+
+        {
+        provide: APP_INITIALIZER,
+        useFactory: (security: SecurityService) => () => security.restoreSession(),
+        deps: [SecurityService],
+        multi: true
+        },
+
+        {
+        provide: APP_INFO,
+        useValue: {
+            name: 'EnergyMonitoring',
+            version: '1.0.0',
+            environment: 'prod'
+        }
+        },
+
+        {
+        provide: ENVIRONMENT,
+            useValue: {
+                apiUrl: 'https://localhost:7104/api',
+                production: true
+            }
+        },
+        // {
+        //     provide: SolarPlantRepository,
+        //     useClass: SolarPlantRepositoryImpl
+        // },
+
+        SOLAR_PLANT_PROVIDERS,
+        ...provideReadingsFeature()
+    ]
+};

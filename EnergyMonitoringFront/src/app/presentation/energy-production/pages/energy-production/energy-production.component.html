@@ -1,0 +1,126 @@
+<div class="space-y-6 animate-fade-in">
+    <div>
+        <h1 class="text-2xl font-bold text-foreground">Producción de Energía</h1>
+        <p class="text-muted-foreground mt-1">Historial de generación solar</p>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <!-- StatCard 1 -->
+        <div class="glass-card rounded-xl p-5 border border-border relative overflow-hidden group">
+            <div class="flex flex-col h-full relative z-10">
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-sm font-medium text-muted-foreground">Promedio Diario</span>
+                    <div class="p-2 rounded-lg bg-primary/10 text-primary">
+                        <lucide-icon [name]="Zap" class="h-5 w-5"></lucide-icon>
+                    </div>
+                </div>
+                <div class="flex items-baseline gap-1 mt-auto">
+                    <span class="text-2xl font-bold text-foreground">{{avgKwh}}</span>
+                    <span class="text-sm font-medium text-muted-foreground">kWh</span>
+                </div>
+            </div>
+            <div
+                class="absolute -right-4 -bottom-4 w-24 h-24 bg-primary/5 rounded-full blur-2xl group-hover:bg-primary/10 transition-colors">
+            </div>
+        </div>
+
+        <!-- StatCard 2 -->
+        <div class="glass-card rounded-xl p-5 border border-border relative overflow-hidden group">
+            <div class="flex flex-col h-full relative z-10">
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-sm font-medium text-muted-foreground">Eficiencia Prom.</span>
+                    <div class="p-2 rounded-lg bg-accent/10 text-accent">
+                        <lucide-icon [name]="Gauge" class="h-5 w-5"></lucide-icon>
+                    </div>
+                </div>
+                <div class="flex items-baseline gap-1 mt-auto">
+                    <span class="text-2xl font-bold text-foreground">{{avgEfficiency}}</span>
+                    <span class="text-sm font-medium text-muted-foreground">%</span>
+                </div>
+            </div>
+            <div
+                class="absolute -right-4 -bottom-4 w-24 h-24 bg-accent/5 rounded-full blur-2xl group-hover:bg-accent/10 transition-colors">
+            </div>
+        </div>
+
+        <!-- StatCard 3 -->
+        <div class="glass-card rounded-xl p-5 border border-border relative overflow-hidden group">
+            <div class="flex flex-col h-full relative z-10">
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-sm font-medium text-muted-foreground">Voltaje Prom.</span>
+                    <div class="p-2 rounded-lg bg-muted text-foreground">
+                        <lucide-icon [name]="Activity" class="h-5 w-5"></lucide-icon>
+                    </div>
+                </div>
+                <div class="flex items-baseline gap-1 mt-auto">
+                    <span class="text-2xl font-bold text-foreground">225</span>
+                    <span class="text-sm font-medium text-muted-foreground">V</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- StatCard 4 -->
+        <div class="glass-card rounded-xl p-5 border border-border relative overflow-hidden group">
+            <div class="flex flex-col h-full relative z-10">
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-sm font-medium text-muted-foreground">Corriente Prom.</span>
+                    <div class="p-2 rounded-lg bg-muted text-foreground">
+                        <lucide-icon [name]="TrendingUp" class="h-5 w-5"></lucide-icon>
+                    </div>
+                </div>
+                <div class="flex items-baseline gap-1 mt-auto">
+                    <span class="text-2xl font-bold text-foreground">9.2</span>
+                    <span class="text-sm font-medium text-muted-foreground">A</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="glass-card rounded-xl p-6 border border-border animate-fade-in">
+        <h3 class="text-base font-semibold text-foreground mb-4">Producción Diaria (kWh)</h3>
+        <div
+            class="h-[320px] w-full flex items-center justify-center bg-muted/20 rounded-lg border border-dashed border-border">
+            <div class="text-center">
+                <lucide-icon [name]="Activity"
+                    class="h-8 w-8 text-muted-foreground mx-auto mb-2 opacity-50"></lucide-icon>
+                <p class="text-muted-foreground">Gráfico de líneas próximamente (Recharts)</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="glass-card rounded-xl p-6 border border-border animate-fade-in">
+        <h3 class="text-base font-semibold text-foreground mb-4">Historial Detallado</h3>
+        <div class="overflow-x-auto">
+            <table class="w-full text-sm">
+                <thead>
+                    <tr class="border-b border-border">
+                        <th class="text-left py-3 px-4 text-muted-foreground font-medium">Fecha</th>
+                        <th class="text-right py-3 px-4 text-muted-foreground font-medium">kWh</th>
+                        <th class="text-right py-3 px-4 text-muted-foreground font-medium">Voltaje</th>
+                        <th class="text-right py-3 px-4 text-muted-foreground font-medium">Corriente</th>
+                        <th class="text-right py-3 px-4 text-muted-foreground font-medium">Eficiencia</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (d of data; track d.id) {
+                    <tr class="border-b border-border/50 hover:bg-muted/30 transition-colors">
+                        <td class="py-3 px-4 text-foreground">{{d.date}}</td>
+                        <td class="py-3 px-4 text-right font-mono text-primary font-semibold">{{d.kwhGenerated |
+                            number:'1.1-1'}}</td>
+                        <td class="py-3 px-4 text-right font-mono text-foreground">{{d.avgVoltage | number:'1.0-0'}}V
+                        </td>
+                        <td class="py-3 px-4 text-right font-mono text-foreground">{{d.avgCurrent | number:'1.1-1'}}A
+                        </td>
+                        <td class="py-3 px-4 text-right">
+                            <span class="font-mono font-semibold"
+                                [ngClass]="d.efficiency > 90 ? 'text-primary' : 'text-accent'">
+                                {{d.efficiency | number:'1.1-1'}}%
+                            </span>
+                        </td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

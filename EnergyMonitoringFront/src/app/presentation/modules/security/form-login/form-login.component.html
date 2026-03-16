@@ -1,0 +1,49 @@
+<div class="container min-vh-100 d-flex align-items-center justify-content-center">
+    <div class="row w-100 justify-content-center">
+        <div class="col-12 col-sm-10 col-md-8 col-lg-5">
+            <mat-card class="p-4 shadow-sm rounded-4">
+                <div class="text-center mb-3">
+                    <img src="images/logo_1024X1024.png" alt="Logo" class="logo mb-2" />
+                    <h1 class="h4 fw-bold">{{title}}</h1>
+                    <p class="text-muted small">Accede con tu cuenta</p>
+                </div>
+
+                <form [formGroup]="form" (ngSubmit)="saveChanges()">
+                    <app-show-errores [errores]="errores"></app-show-errores>
+
+                    <mat-form-field appearance="outline" class="w-100 mb-3">
+                        <mat-label>Correo electrónico</mat-label>
+                        <input matInput type="email" formControlName="email" placeholder="tucorreo@dominio.com" [formControl]="form.controls.email" />
+                        <mat-icon matSuffix>mail</mat-icon>
+                        <mat-error>{{getMessageErrorEmail()}}</mat-error>
+                    </mat-form-field>
+
+                    <mat-form-field appearance="outline" class="w-100 mb-3">
+                        <mat-label for="password">Contraseña</mat-label>
+                        <input matInput [type]="hide ? 'password' : 'text'" formControlName="password" [formControl]="form.controls.password" />
+                        <button mat-icon-button matSuffix type="button" (click)="hide = !hide">
+                        <mat-icon>{{ hide ? 'visibility' : 'visibility_off' }}</mat-icon>
+                        </button>
+                        <mat-error>{{getMessageErrorPassword()}}</mat-error>
+                    </mat-form-field>
+
+                    <!-- <div class="d-flex justify-content-between align-items-center mb-3">
+                        <mat-checkbox formControlName="remember">Recordarme</mat-checkbox>
+                    </div> -->
+
+                    <button mat-raised-button  class="w-100 py-2 primary" type="submit" [disabled]="form.invalid">
+                        @if (!loading) {
+                        <span><mat-icon class="me-1">login</mat-icon> Entrar</span>
+                        } @else {
+                        <mat-progress-spinner diameter="20" mode="indeterminate"></mat-progress-spinner>
+                        }
+                    </button>
+                </form>
+
+                <div class="text-center mt-3">
+                    <small class="text-muted">¿No tienes cuenta?<a href="register" class="text-decoration-none">Regístrate</a></small>
+                </div>
+            </mat-card>
+        </div>
+    </div>
+</div>

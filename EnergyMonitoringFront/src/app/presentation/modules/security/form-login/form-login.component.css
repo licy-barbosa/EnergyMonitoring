@@ -1,0 +1,18 @@
+.logo {
+  width: 100px;
+  height: 100px;
+}
+
+mat-card {
+  border: 1px solid rgba(0,0,0,.08);
+}
+
+button[mat-raised-button] {
+  min-height: 44px;
+}
+
+@media (max-width: 575.98px) {
+  mat-card {
+    padding: 1rem !important;
+  }
+}
