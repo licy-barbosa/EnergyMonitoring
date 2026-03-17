@@ -164,5 +164,7 @@ namespace EnergyMonitoring.Domain.Entities
 
             IsActive = false;
         }
+
+        public ICollection<Device> Devices { get; private set; } = new List<Device>();
     }
 }

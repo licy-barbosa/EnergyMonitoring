@@ -1,10 +1,12 @@
-﻿namespace EnergyMonitoring.Domain.Entities
+﻿using EnergyMonitoring.Domain.Common;
+
+namespace EnergyMonitoring.Domain.Entities
 {
     /// <summary>
     /// Represents an electrical device being monitored.
     /// Representa un equipo eléctrico monitoreado.
     /// </summary>
-    public class Device
+    public class Device : AuditableEntity, ICompanyEntity
     {
         /// <summary>
         /// Unique identifier.
@@ -12,11 +14,16 @@
         /// </summary>
         public Guid Id { get; set; }
 
+        public Guid CompanyId { get; private set; }
+
+        public Guid SolarPlantId { get; set; }
+        public SolarPlant SolarPlant { get; private set; } = default!;
+
         /// <summary>
         /// Device name.
         /// Nombre del dispositivo.
         /// </summary>
-        public string Name { get; set; } = default!;
+        public string Name { get; private set; } = default!;
 
         /// <summary>
         /// Device description.
@@ -25,20 +32,20 @@
         public string? Description { get; set; }
 
         /// <summary>
-        /// Physical location.
-        /// Ubicación física.
-        /// </summary>
-        public string? Location { get; set; }
-
-        /// <summary>
         /// Rated power according to specifications.
         /// Potencia nominal según fabricante.
         /// </summary>
-        public decimal? RatedPowerWatts { get; set; }
+        public double? RatedPowerWatts { get; set; }
         public bool IsActive { get; set; } = true;
-        public string CreatedByUserId { get; set; } = default!;
-        public ApplicationUser CreatedByUser { get; set; } = default!;
 
         public ICollection<DeviceMeasurement> Measurements { get; set; } = new List<DeviceMeasurement>();
+
+        private Device() { }
+        public Device(Guid companyId, Guid solarPlantId, string name)
+        {
+            CompanyId = companyId;
+            SolarPlantId = solarPlantId;
+            Name = name;
+        }
     }
 }
