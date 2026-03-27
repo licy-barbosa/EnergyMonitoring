@@ -9,13 +9,14 @@ import { authInterceptor } from './core/auth/interceptors/auth.interceptor';
 import { provideReadingsFeature } from './application/readings/readings.providers';
 import { SecurityService } from '@core/auth/services/security.service';
 import { SOLAR_PLANT_PROVIDERS } from '@infrastructure/solar-plant/solar-plant.provider';
+import { DeviceRepositoryImpl } from '@infrastructure/device/device.repository.impl';
+import { DEVICE_REPOSITORY } from '@domain/solar-panel/repositories/device.repository';
 
 import {
   ApplicationConfig,
   provideZoneChangeDetection,
   APP_INITIALIZER,
 } from '@angular/core';
-
 
 export const appConfig: ApplicationConfig = {
     providers: [
@@ -50,10 +51,10 @@ export const appConfig: ApplicationConfig = {
                 production: true
             }
         },
-        // {
-        //     provide: SolarPlantRepository,
-        //     useClass: SolarPlantRepositoryImpl
-        // },
+        {
+            provide: DEVICE_REPOSITORY,
+            useClass: DeviceRepositoryImpl
+        },
 
         SOLAR_PLANT_PROVIDERS,
         ...provideReadingsFeature()

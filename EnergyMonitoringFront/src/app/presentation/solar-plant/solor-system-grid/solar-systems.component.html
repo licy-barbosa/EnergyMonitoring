@@ -1,0 +1,105 @@
+<div class="space-y-6 animate-fade-in relative h-full">
+    <div class="flex items-center justify-between">
+        <div>
+            <h1 class="text-2xl font-bold text-foreground">Paneles Solares</h1>
+            <p class="text-muted-foreground mt-1">Gestiona tus sistemas fotovoltaicos</p>
+        </div>
+
+        <button (click)="openModal()"
+            class="h-10 px-4 rounded-lg bg-primary text-primary-foreground font-semibold text-sm flex items-center gap-2 hover:opacity-90 transition-opacity">
+            <lucide-icon [name]="Plus" class="h-4 w-4"></lucide-icon> Nuevo Sistema
+        </button>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        @for (sys of systems$ | async; track sys.id) {
+        <div
+        class="glass-card rounded-xl border border-border p-6 relative group cursor-pointer hover:border-primary/50 transition-colors"
+        (click)="goToEquipment(sys.id, $event)">
+            <div class="flex items-start justify-between mb-4 relative z-50 w-full">
+                <div class="flex items-center gap-3">
+                    <div class="p-2.5 rounded-lg bg-primary/10">
+                        <lucide-icon [name]="Sun" class="h-5 w-5 text-primary"></lucide-icon>
+                    </div>
+                    <div>
+                        <h3 class="font-semibold text-foreground">{{sys.name}}</h3>
+                        <span class="text-xs font-medium px-2 py-0.5 rounded-full"
+                        [ngClass]="sys.isActive === true ? 'bg-primary/10 text-primary' : 'bg-muted text-muted-foreground'">
+                        {{sys.isActive === true ? 'Activo' : 'Inactivo'}}
+                        </span>
+                    </div>
+                </div>
+
+                <div class="relative">
+                <button (click)="toggleMenu(sys.id, $event)"
+                    class="p-2 rounded-lg hover:bg-muted transition-colors text-muted-foreground hover:text-foreground h-10 w-10 flex items-center justify-center">
+                    <lucide-icon [name]="MoreVertical" class="h-5 w-5"></lucide-icon>
+                </button>
+
+                <div *ngIf="openMenuId === sys.id"
+                    class="absolute right-0 mt-2 w-48 glass-card rounded-xl shadow-xl z-[100] overflow-hidden py-1 animate-in fade-in zoom-in-95"
+                    (click)="$event.stopPropagation()">
+
+                    <button (click)="editSystem(sys.id); openMenuId = null; $event.stopPropagation()"
+                    class="w-full flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-foreground hover:bg-muted transition-colors text-left">
+                    <lucide-icon [name]="Edit" class="h-4 w-4"></lucide-icon>
+                    Editar
+                    </button>
+
+                    <!-- <button (click)="goToConfig(sys.id, $event)"
+                    class="w-full flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-foreground hover:bg-muted transition-colors text-left">
+                    <lucide-icon [name]="Settings" class="h-4 w-4"></lucide-icon>
+                    Configuración
+                    </button> -->
+
+                    <!-- <button (click)="goToEquipment(sys.id, $event)"
+                    class="w-full flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-foreground hover:bg-muted transition-colors text-left">
+                    <lucide-icon [name]="Plug" class="h-4 w-4"></lucide-icon>
+                    Ver equipos
+                    </button> -->
+
+                    <!-- <button (click)="toggleStatus(sys, $event)"
+                    class="w-full flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-foreground hover:bg-muted transition-colors text-left">
+                    <lucide-icon [name]="Power" class="h-4 w-4"></lucide-icon>
+                    {{sys.isActive ? 'Desactivar' : 'Activar'}}
+                    </button> -->
+
+                    <div class="h-px bg-border my-1"></div>
+
+                    <!-- <button (click)="deleteSystem(sys.id, $event)"
+                    class="w-full flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-destructive hover:bg-destructive/10 transition-colors text-left">
+                    <lucide-icon [name]="Trash2" class="h-4 w-4"></lucide-icon>
+                    Eliminar
+                    </button> -->
+                </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4 mt-4 relative z-10 w-full pointer-events-none">
+                <div>
+                    <p class="text-xs text-muted-foreground mb-1">Potencia por panel</p>
+                    <p class="text-lg font-bold text-foreground">{{sys.totalPowerKw}}W</p>
+                </div>
+
+                <div>
+                    <p class="text-xs text-muted-foreground mb-1">Potencia Total</p>
+                    <p class="text-lg font-bold text-primary">{{sys.totalPowerKw}} kW</p>
+                </div>
+
+                <div>
+                    <p class="text-xs text-muted-foreground mb-1">Fecha de instalación</p>
+                    <div class="flex items-center gap-1 text-foreground">
+                        <lucide-icon [name]="Calendar" class="h-3.5 w-3.5 text-muted-foreground"></lucide-icon>
+                        <p class="text-sm font-medium">{{ sys.installationDate ? (sys.installationDate | date:'M/d/yyyy') : 'N/A' }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        }
+    </div>
+
+    <app-solar-system-modal [isModalOpen]="isModalOpen" [isEditMode]="isEditMode" [systemForm]="systemForm"
+        [panels]="panels" [totalPowerKw]="totalPowerKw" (closeModal)="closeModal()" (submitForm)="submit()"
+        (addPanel)="addPanel()" (removePanel)="removePanel($event)">
+    </app-solar-system-modal>
+</div>
