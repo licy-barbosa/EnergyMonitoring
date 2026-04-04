@@ -1,0 +1,56 @@
+<div class="space-y-6 animate-fade-in relative h-full">
+    <div class="flex items-center justify-between">
+        <div>
+            <h1 class="text-2xl font-bold text-foreground">Equipos Eléctricos</h1>
+            <p class="text-muted-foreground mt-1">Administra tus dispositivos</p>
+        </div>
+        <button (click)="openModal()"
+            class="h-10 px-4 rounded-lg bg-primary text-primary-foreground font-semibold text-sm flex items-center gap-2 hover:opacity-90 transition-opacity">
+            <lucide-icon [name]="Plus" class="h-4 w-4"></lucide-icon> Agregar Equipo
+        </button>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        @for (dev of devices$ | async; track dev.id) {
+            <div
+                class="glass-card rounded-xl border border-border p-5 relative overflow-hidden group hover:border-primary/30 transition-colors"
+                (click)="editDevice(dev.id)">
+                <div class="flex items-start justify-between mb-3 relative z-10">
+                    <div class="flex items-center gap-3">
+                        <div class="p-2 rounded-lg" [ngClass]="dev.isActive === true ? 'bg-primary/10' : 'bg-muted'">
+                            <lucide-icon [name]="Cpu" class="h-4 w-4"
+                                [ngClass]="dev.isActive === true ? 'text-primary' : 'text-muted-foreground'"></lucide-icon>
+                        </div>
+
+                        <div>
+                            <h3 class="font-semibold text-foreground text-sm">{{dev.name}}</h3>
+                            <!-- <div class="flex items-center gap-1 text-xs text-muted-foreground mt-0.5">
+                                <lucide-icon [name]="MapPin" class="h-3 w-3"></lucide-icon> {{dev.description}}
+                            </div> -->
+                        </div>
+                    </div>
+
+                    <span class="text-xs font-semibold px-2 py-0.5 rounded-full"
+                        [ngClass]="dev.isActive === true ? 'bg-primary/10 text-primary' : 'bg-muted text-muted-foreground'">
+                        {{dev.isActive === true ? 'Activo' : 'Inactivo'}}
+                    </span>
+                </div>
+
+                <div class="flex items-center justify-between mt-4 pt-3 border-t border-border/50 relative z-10">
+                    <div>
+                        <p class="text-xs text-muted-foreground">Potencia</p>
+                        <p class="font-bold text-foreground">{{dev.ratedPowerWatts}}W</p>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-xs text-muted-foreground">Consumo/mes</p>
+                        <p class="font-bold text-accent">{{dev.ratedPowerWatts}} kWh</p>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+ 
+<app-device-modal [isModalOpen]="isModalOpen" [isEditMode]="isEditMode" [deviceForm]="deviceForm"
+        (closeModal)="closeModal()" (submitForm)="onSubmit()">
+</app-device-modal>

@@ -51,7 +51,7 @@ namespace EnergyMonitoring.Infrastructure.Services
             await _context.SolarPlants.AddAsync(plant); 
 
             var result =  await _context.SaveChangesAsync();
-            Console.WriteLine($"Created Solar Plant with ID: {plant.Id}, SaveChanges result: {result}");
+   
             return true;
         }
 

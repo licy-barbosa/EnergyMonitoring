@@ -4,10 +4,10 @@ namespace EnergyMonitoring.Application.Interfaces
 {
     public interface IDeviceService
     {
-        Task<IEnumerable<DeviceDTO>> GetByUserAsync(string userId);
-        Task<DeviceDTO?> GetByIdAsync(Guid id, string userId);
-        Task<DeviceDTO> CreateAsync(CreateDeviceDTO dto, string userId);
-        Task<bool> UpdateAsync(Guid id, CreateDeviceDTO dto, string userId);
-        Task<bool> DeleteAsync(Guid id, string userId);
+        Task<IEnumerable<DeviceDTO>> GetByPlantAsync(Guid id);
+        Task<DeviceDTO?> GetByIdAsync(Guid id);
+        Task<bool> CreateAsync(CreateDeviceDTO dto);
+        Task<bool> UpdateAsync(Guid id, UpdateDeviceDTO dto);
+        Task<bool> DeleteAsync(Guid id);
     }
 }

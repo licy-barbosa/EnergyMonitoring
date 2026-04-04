@@ -1,0 +1,79 @@
+
+@if (isModalOpen) {
+    <div class="fixed inset-0 z-50 overflow-y-auto bg-background/80 backdrop-blur-sm animate-in fade-in duration-200">
+        <div class="flex min-h-full items-center justify-center p-4 sm:p-6 text-center">
+            <div
+                class="glass-card w-full max-w-md md:max-w-2xl rounded-xl border border-border p-6 shadow-lg animate-in zoom-in-95 duration-200 text-left">
+                <div class="flex items-center justify-between mb-6">
+                    <h2 class="text-xl font-bold text-foreground">Agregar Nuevo Equipo</h2>
+                    <button (click)="closeModal.emit()"
+                        class="p-2 rounded-lg hover:bg-muted transition-colors text-muted-foreground hover:text-foreground">
+                        <lucide-icon [name]="X" class="h-5 w-5"></lucide-icon>
+                    </button>
+                </div>
+
+                <form [formGroup]="deviceForm" (ngSubmit)="submitForm.emit()" class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-foreground mb-1">Nombre del Equipo</label>
+                        <input type="text" formControlName="name" placeholder="Ej. Aire Acondicionado"
+                            class="w-full h-10 px-3 rounded-lg bg-background border border-input text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all placeholder:text-muted-foreground flex items-center">
+                        @if(deviceForm.get('name')?.invalid && deviceForm.get('name')?.touched) {
+                        <p class="text-xs text-destructive mt-1">El nombre es requerido.</p>
+                        }
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-foreground mb-1">Descripción</label>
+                        <input type="text" formControlName="description" placeholder="Ej. Descripción del equipo"
+                            class="w-full h-10 px-3 rounded-lg bg-background border border-input text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all placeholder:text-muted-foreground flex items-center">
+                        @if(deviceForm.get('description')?.invalid && deviceForm.get('description')?.touched) {
+                        <p class="text-xs text-destructive mt-1">La descripción es requerida.</p>
+                        }
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-foreground mb-1">Potencia (W)</label>
+                            <input type="number" formControlName="ratedPowerWatts" placeholder="Ej. 1500"
+                                class="w-full h-10 px-3 rounded-lg bg-background border border-input text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all placeholder:text-muted-foreground flex items-center">
+                            @if(deviceForm.get('ratedPowerWatts')?.invalid && deviceForm.get('ratedPowerWatts')?.touched) {
+                            <p class="text-xs text-destructive mt-1">Potencia nominal (W) es requerida.</p>
+                            }
+                        </div>
+
+                        <!-- <div>
+                            <label class="block text-sm font-medium text-foreground mb-1">Consumo/mes (kWh)</label>
+                            <input type="number" formControlName="expectedMonthlyKwh" placeholder="Ej. 180"
+                                class="w-full h-10 px-3 rounded-lg bg-background border border-input text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all placeholder:text-muted-foreground flex items-center">
+                            @if(deviceForm.get('expectedMonthlyKwh')?.invalid &&
+                            deviceForm.get('expectedMonthlyKwh')?.touched) {
+                            <p class="text-xs text-destructive mt-1">Consumo inválido.</p>
+                            }
+                        </div> -->
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-foreground mb-1">Estado</label>
+                        <select formControlName="isActive"
+                            class="w-full h-10 px-3 rounded-lg bg-background border border-input text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all hover:bg-muted/50">
+                            <option value="true">Activo</option>
+                            <option value="false">Inactivo</option>
+                        </select>
+                    </div>
+
+                    <div class="flex justify-end gap-3 mt-6">
+                        <button type="button" (click)="closeModal.emit()"
+                            class="h-10 px-4 rounded-lg bg-muted text-foreground font-semibold text-sm hover:opacity-90 transition-opacity">
+                            Cancelar
+                        </button>
+
+                        <button type="submit" [disabled]="deviceForm.invalid"
+                            class="h-10 px-4 rounded-lg bg-primary text-primary-foreground font-semibold text-sm hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed">
+                            {{ isEditMode ? 'Actualizar' : 'Crear' }} Equipo
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+}

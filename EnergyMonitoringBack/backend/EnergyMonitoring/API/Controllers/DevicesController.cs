@@ -17,19 +17,17 @@ namespace EnergyMonitoring.API.Controllers
             _service = service;
         }
 
-        private string GetUserId() => User.FindFirst("uid")!.Value;
-
-        [HttpGet]
-        public async Task<IActionResult> Get()
+        [HttpGet("bySolarPlant/{id}")]
+        public async Task<IActionResult> Get(Guid id)
         {
-            var devices = await _service.GetByUserAsync(GetUserId());
+            var devices = await _service.GetByPlantAsync(id);
             return Ok(devices);
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(Guid id)
         {
-            var device = await _service.GetByIdAsync(id, GetUserId());
+            var device = await _service.GetByIdAsync(id);
             if (device == null) return NotFound();
             return Ok(device);
         }
@@ -37,22 +35,27 @@ namespace EnergyMonitoring.API.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(CreateDeviceDTO dto)
         {
-            var result = await _service.CreateAsync(dto, GetUserId());
-            return Ok(result);
+            var device = await _service.CreateAsync(dto);
+
+            if (!device)
+                return NotFound();
+
+            return Ok(device);
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(Guid id, CreateDeviceDTO dto)
+        public async Task<IActionResult> Update(Guid id, [FromBody] UpdateDeviceDTO dto)
         {
-            var updated = await _service.UpdateAsync(id, dto, GetUserId());
+            var updated = await _service.UpdateAsync(id, dto);
             if (!updated) return NotFound();
-            return NoContent();
+
+            return Ok();
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(Guid id)
         {
-            var deleted = await _service.DeleteAsync(id, GetUserId());
+            var deleted = await _service.DeleteAsync(id);
             if (!deleted) return NotFound();
             return NoContent();
         }

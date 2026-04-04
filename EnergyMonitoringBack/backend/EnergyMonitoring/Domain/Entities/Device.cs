@@ -12,11 +12,11 @@ namespace EnergyMonitoring.Domain.Entities
         /// Unique identifier.
         /// Identificador único.
         /// </summary>
-        public Guid Id { get; set; }
+        public Guid Id { get; private set; }
 
         public Guid CompanyId { get; private set; }
 
-        public Guid SolarPlantId { get; set; }
+        public Guid SolarPlantId { get; private set; }
         public SolarPlant SolarPlant { get; private set; } = default!;
 
         /// <summary>
@@ -29,23 +29,40 @@ namespace EnergyMonitoring.Domain.Entities
         /// Device description.
         /// Descripción del equipo.
         /// </summary>
-        public string? Description { get; set; }
+        public string? Description { get; private set; }
 
         /// <summary>
         /// Rated power according to specifications.
         /// Potencia nominal según fabricante.
         /// </summary>
-        public double? RatedPowerWatts { get; set; }
-        public bool IsActive { get; set; } = true;
+        public double? RatedPowerWatts { get; private set; } = null;
+        public bool IsActive { get; private set; } = true;
 
         public ICollection<DeviceMeasurement> Measurements { get; set; } = new List<DeviceMeasurement>();
 
         private Device() { }
-        public Device(Guid companyId, Guid solarPlantId, string name)
+        public Device(
+            Guid companyId, 
+            Guid solarPlantId, 
+            string name, 
+            string? description, 
+            double? ratedPowerWatts, 
+            bool isActive)
         {
+            Id = Guid.NewGuid();
             CompanyId = companyId;
             SolarPlantId = solarPlantId;
             Name = name;
+            Description = description;
+            RatedPowerWatts = ratedPowerWatts;
+            IsActive = isActive;
+        }
+
+        public void Update(string name, string? description, double? ratedPowerWatts, bool isActive) { 
+            Name = name;
+            Description = description;
+            RatedPowerWatts = ratedPowerWatts;
+            IsActive = isActive;
         }
     }
 }

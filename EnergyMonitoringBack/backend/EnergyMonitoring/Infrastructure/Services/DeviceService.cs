@@ -9,22 +9,23 @@ namespace EnergyMonitoring.Infrastructure.Services
     public class DeviceService : IDeviceService
     {
         private readonly ApplicationDbContext _context;
+        private readonly ICurrentUserService _currentUser;
 
-        public DeviceService(ApplicationDbContext context)
+        public DeviceService(ApplicationDbContext context, ICurrentUserService currentUser)
         {
             _context = context;
+            _currentUser = currentUser;
         }
 
-        public async Task<IEnumerable<DeviceDTO>> GetByUserAsync(string userId)
+        public async Task<IEnumerable<DeviceDTO>> GetByPlantAsync(Guid id)
         {
             return await _context.Devices
-                .Where(x => x.CreatedByUserId == userId)
+                .Where(d=> d.SolarPlantId == id)
                 .Select(x => new DeviceDTO
                 {
                     Id = x.Id,
                     Name = x.Name,
                     Description = x.Description,
-                    Location = x.Location,
                     RatedPowerWatts = x.RatedPowerWatts,
                     //ExpectedMonthlyConsumptionKWh = x.ExpectedMonthlyConsumptionKWh,
                     IsActive = x.IsActive
@@ -32,72 +33,53 @@ namespace EnergyMonitoring.Infrastructure.Services
                 .ToListAsync();
         }
 
-        public async Task<DeviceDTO?> GetByIdAsync(Guid id, string userId)
+        public async Task<DeviceDTO?> GetByIdAsync(Guid id)
         {
             return await _context.Devices
-                .Where(x => x.Id == id && x.CreatedByUserId == userId)
+                .Where(x => x.Id == id)
                 .Select(x => new DeviceDTO
                 {
                     Id = x.Id,
                     Name = x.Name,
                     Description = x.Description,
-                    Location = x.Location,
                     RatedPowerWatts = x.RatedPowerWatts,
-                    //ExpectedMonthlyConsumptionKWh = x.ExpectedMonthlyConsumptionKWh,
                     IsActive = x.IsActive
                 })
                 .FirstOrDefaultAsync();
         }
 
-        public async Task<DeviceDTO> CreateAsync(CreateDeviceDTO dto, string userId)
+        public async Task<bool> CreateAsync(CreateDeviceDTO dto)
         {
-            var entity = new Device
-            {
-                Id = Guid.NewGuid(),
-                Name = dto.Name,
-                Description = dto.Description,
-                Location = dto.Location,
-                RatedPowerWatts = dto.RatedPowerWatts,
-                //ExpectedMonthlyConsumptionKWh = dto.ExpectedMonthlyConsumptionKWh,
-                CreatedByUserId = userId
-            };
+            var companyId = _currentUser.CompanyId;
 
-            _context.Devices.Add(entity);
-            await _context.SaveChangesAsync();
+            if(companyId is null)
+                return false;
 
-            return new DeviceDTO
-            {
-                Id = entity.Id,
-                Name = entity.Name,
-                Description = entity.Description,
-                Location = entity.Location,
-                RatedPowerWatts = entity.RatedPowerWatts,
-                //ExpectedMonthlyConsumptionKWh = entity.ExpectedMonthlyConsumptionKWh,
-                IsActive = entity.IsActive
-            };
-        }
+            var device = new Device(companyId.Value, dto.SolarPlantId, dto.Name, dto.Description, dto.RatedPowerWatts, dto.IsActive);
 
-        public async Task<bool> UpdateAsync(Guid id, CreateDeviceDTO dto, string userId)
-        {
-            var entity = await _context.Devices
-                .FirstOrDefaultAsync(x => x.Id == id && x.CreatedByUserId == userId);
+            await _context.Devices.AddAsync(device);
 
-            if (entity == null) return false;
+            var result = await _context.SaveChangesAsync();
 
-            entity.Name = dto.Name;
-            entity.Description = dto.Description;
-            entity.Location = dto.Location;
-            entity.RatedPowerWatts = dto.RatedPowerWatts;
-            //entity.ExpectedMonthlyConsumptionKWh = dto.ExpectedMonthlyConsumptionKWh;
-
-            await _context.SaveChangesAsync();
             return true;
         }
 
-        public async Task<bool> DeleteAsync(Guid id, string userId)
+        public async Task<bool> UpdateAsync(Guid id, UpdateDeviceDTO dto)
         {
             var entity = await _context.Devices
-                .FirstOrDefaultAsync(x => x.Id == id && x.CreatedByUserId == userId);
+                .FirstOrDefaultAsync(x => x.Id == id);
+
+            if (entity == null) return false;
+
+            entity.Update(dto.Name, dto.Description, dto.RatedPowerWatts, dto.IsActive);
+
+            var result = await _context.SaveChangesAsync();
+            return true;
+        }
+
+        public async Task<bool> DeleteAsync(Guid id)
+        {
+            var entity = await _context.Devices.FirstOrDefaultAsync(x => x.Id == id);
 
             if (entity == null) return false;
 

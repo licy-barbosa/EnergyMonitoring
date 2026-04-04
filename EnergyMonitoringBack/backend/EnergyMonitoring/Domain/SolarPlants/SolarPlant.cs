@@ -1,6 +1,5 @@
 ﻿using EnergyMonitoring.Application.DTOs.SolarPlants;
 using EnergyMonitoring.Domain.Common;
-using System.ComponentModel.Design;
 
 namespace EnergyMonitoring.Domain.Entities
 {

@@ -2,7 +2,6 @@
 using EnergyMonitoring.Application.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
 
 namespace EnergyMonitoring.API.Controllers
 {
@@ -20,7 +19,6 @@ namespace EnergyMonitoring.API.Controllers
 
         [HttpGet]
         public async Task<IActionResult> Get() {
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             var plants = await _service.GetByUserAsync();
 
                 return Ok(plants);
@@ -29,7 +27,6 @@ namespace EnergyMonitoring.API.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetDetail(Guid id)
         {
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             var plant = await _service.GetDetailAsync(id);
 
             return Ok(plant);
@@ -42,7 +39,6 @@ namespace EnergyMonitoring.API.Controllers
 
             return Ok(id);
         }
-
 
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(Guid id, UpdateSolarPlantDTO dto)

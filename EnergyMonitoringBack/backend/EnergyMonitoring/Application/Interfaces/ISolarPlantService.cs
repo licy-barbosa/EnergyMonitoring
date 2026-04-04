@@ -1,5 +1,4 @@
 ﻿using EnergyMonitoring.Application.DTOs.SolarPlants;
-using Microsoft.AspNetCore.Mvc;
 
 namespace EnergyMonitoring.Application.Interfaces
 {

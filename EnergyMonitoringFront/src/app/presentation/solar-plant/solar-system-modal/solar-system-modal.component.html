@@ -1,100 +1,101 @@
 @if (isModalOpen) {
-    <div class="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-background/80 backdrop-blur-sm animate-in fade-in duration-200">
-        <div class="glass-card w-full max-w-md md:max-w-2xl rounded-xl border border-border p-6 shadow-lg animate-in zoom-in-95 duration-200 text-left flex flex-col max-h-[90vh]">
-            <div class="flex items-center justify-between mb-6 shrink-0">
-                <h2 class="text-xl font-bold text-foreground">{{ isEditMode ? 'Actualizar' : 'Añadir Nuevo' }} Sistema</h2>
-                <button (click)="closeModal.emit()"
-                    class="p-2 rounded-lg hover:bg-muted transition-colors text-muted-foreground hover:text-foreground">
-                    <lucide-icon [name]="X" class="h-5 w-5"></lucide-icon>
-                </button>
-            </div>
+    <div class="fixed inset-0 z-50 overflow-y-auto bg-background/80 backdrop-blur-sm animate-in fade-in duration-200">
+        <div class="flex min-h-full items-center justify-center p-4 sm:p-6 text-center">
+            <div class="glass-card w-full max-w-md md:max-w-2xl rounded-xl border border-border p-6 shadow-lg animate-in zoom-in-95 duration-200 text-left">
 
-            <form [formGroup]="systemForm" (ngSubmit)="submitForm.emit()" class="space-y-4 overflow-y-auto pr-2">
-                <br><br><br><br><br><br>
-                
-                <div>
-                    <label class="block text-sm font-medium text-foreground mb-1">Nombre del Sistema</label>
-                    <input type="text" formControlName="name" placeholder="Ej. Sistema Techo"
-                        class="w-full h-10 px-3 rounded-lg bg-background border border-input text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all placeholder:text-muted-foreground flex items-center">
-                    @if(systemForm.get('name')?.invalid && systemForm.get('name')?.touched) {
-                    <p class="text-xs text-destructive mt-1">El nombre es requerido.</p>
-                    }
+                <div class="flex items-center justify-between mb-6">
+                    <h2 class="text-xl font-bold text-foreground">{{ isEditMode ? 'Actualizar' : 'Añadir Nuevo' }} Sistema</h2>
+                    <button (click)="closeModal.emit()"
+                        class="p-2 rounded-lg hover:bg-muted transition-colors text-muted-foreground hover:text-foreground">
+                        <lucide-icon [name]="X" class="h-5 w-5"></lucide-icon>
+                    </button>
                 </div>
 
-                <div>
-                    <label class="block text-sm font-medium text-foreground mb-1">Identificador</label>
-                    <input type="text" formControlName="location" placeholder="Ej. Sistema Techo"
-                        class="w-full h-10 px-3 rounded-lg bg-background border border-input text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all placeholder:text-muted-foreground flex items-center">
-                    @if(systemForm.get('location')?.invalid && systemForm.get('location')?.touched) {
-                    <p class="text-xs text-destructive mt-1">El identificador es requerido.</p>
-                    }
-                </div>
-
-                <div class="grid grid-cols-2 gap-4">
+                <form [formGroup]="systemForm" (ngSubmit)="submitForm.emit()" class="space-y-4">           
                     <div>
-                        <label class="block text-sm font-medium text-foreground mb-1">Fecha de Instalación</label>
-                        <input type="date" formControlName="installationDate"
-                            class="w-full h-10 px-3 rounded-lg bg-background border border-input text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all flex items-center [color-scheme:dark]">
-                        @if(systemForm.get('installationDate')?.invalid && systemForm.get('installationDate')?.touched)
-                        {
-                        <p class="text-xs text-destructive mt-1">Fecha requerida.</p>
+                        <label class="block text-sm font-medium text-foreground mb-1">Nombre del Sistema</label>
+                        <input type="text" formControlName="name" placeholder="Ej. Sistema Techo"
+                            class="w-full h-10 px-3 rounded-lg bg-background border border-input text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all placeholder:text-muted-foreground flex items-center">
+                        @if(systemForm.get('name')?.invalid && systemForm.get('name')?.touched) {
+                        <p class="text-xs text-destructive mt-1">El nombre es requerido.</p>
                         }
                     </div>
+
                     <div>
-                        <label class="block text-sm font-medium text-foreground mb-1">Estado</label>
-                        <select formControlName="isActive"
-                            class="w-full h-10 px-3 rounded-lg bg-background border border-input text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all hover:bg-muted/50">
-                            <option value="true">Activo</option>
-                            <option value="false">Inactivo</option>
-                        </select>
+                        <label class="block text-sm font-medium text-foreground mb-1">Identificador</label>
+                        <input type="text" formControlName="location" placeholder="Ej. Sistema Techo"
+                            class="w-full h-10 px-3 rounded-lg bg-background border border-input text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all placeholder:text-muted-foreground flex items-center">
+                        @if(systemForm.get('location')?.invalid && systemForm.get('location')?.touched) {
+                        <p class="text-xs text-destructive mt-1">El identificador es requerido.</p>
+                        }
                     </div>
-                </div>
 
-                <div formArrayName="panels" class="mt-4">
-                    <h3 class="text-sm font-semibold mb-2">Paneles</h3>
-
-                    @for (panel of panels.controls; track $index; let i = $index) {
-                        <div [formGroupName]="i" class="grid grid-cols-[1fr_1fr_1fr_1fr_auto] gap-2 mb-2 items-center">
-                            <input type="text" formControlName="brand" placeholder="Marca"
-                                class="w-full h-10 px-3 rounded-lg bg-background border border-input text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all placeholder:text-muted-foreground flex items-center text-sm" />
-
-                            <input type="text" formControlName="model" placeholder="Modelo"
-                                class="w-full h-10 px-3 rounded-lg bg-background border border-input text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all placeholder:text-muted-foreground flex items-center text-sm" />
-
-                            <input type="number" formControlName="powerWatts" placeholder="Watts"
-                                class="w-full h-10 px-3 rounded-lg bg-background border border-input text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all placeholder:text-muted-foreground flex items-center text-sm" />
-
-                            <input type="number" formControlName="quantity" placeholder="Cantidad"
-                                class="w-full h-10 px-3 rounded-lg bg-background border border-input text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all placeholder:text-muted-foreground flex items-center text-sm" />
-
-                            <button type="button"
-                                class="p-2 rounded-lg bg-destructive/10 text-destructive hover:bg-destructive hover:text-destructive-foreground transition-colors flex items-center justify-center"
-                                (click)="removePanel.emit(i)" title="Eliminar Panel">
-                                <lucide-icon [name]="X" class="h-4 w-4"></lucide-icon>
-                            </button>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-foreground mb-1">Fecha de Instalación</label>
+                            <input type="date" formControlName="installationDate"
+                                class="w-full h-10 px-3 rounded-lg bg-background border border-input text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all flex items-center [color-scheme:dark]">
+                            @if(systemForm.get('installationDate')?.invalid && systemForm.get('installationDate')?.touched)
+                            {
+                            <p class="text-xs text-destructive mt-1">Fecha requerida.</p>
+                            }
                         </div>
-                    }
+                        <div>
+                            <label class="block text-sm font-medium text-foreground mb-1">Estado</label>
+                            <select formControlName="isActive"
+                                class="w-full h-10 px-3 rounded-lg bg-background border border-input text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all hover:bg-muted/50">
+                                <option value="true">Activo</option>
+                                <option value="false">Inactivo</option>
+                            </select>
+                        </div>
+                    </div>
 
-                    <button type="button" (click)="addPanel.emit()"
-                        class="mt-2 h-9 px-3 rounded-lg bg-secondary text-secondary-foreground font-medium text-sm hover:opacity-90 transition-opacity flex items-center justify-center w-full sm:w-auto">Agregar
-                        Panel</button>
-                </div>
+                    <div formArrayName="panels" class="mt-4">
+                        <h3 class="text-sm font-semibold mb-2">Paneles</h3>
 
-                <div class="mt-4 text-sm text-muted-foreground">
-                    Potencia total estimada: <strong>{{ totalPowerKw }} kW</strong>
-                </div>
+                        @for (panel of panels.controls; track $index; let i = $index) {
+                            <div [formGroupName]="i" class="grid grid-cols-[1fr_1fr_1fr_1fr_auto] gap-2 mb-2 items-center">
+                                <input type="text" formControlName="brand" placeholder="Marca"
+                                    class="w-full h-10 px-3 rounded-lg bg-background border border-input text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all placeholder:text-muted-foreground flex items-center text-sm" />
 
-                <div class="flex justify-end gap-3 mt-6">
-                    <button type="button" (click)="closeModal.emit()"
-                        class="h-10 px-4 rounded-lg bg-muted text-foreground font-semibold text-sm hover:opacity-90 transition-opacity">
-                        Cancelar
-                    </button>
-                    <button type="submit" [disabled]="systemForm.invalid"
-                        class="h-10 px-4 rounded-lg bg-primary text-primary-foreground font-semibold text-sm hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed">
-                        {{ isEditMode ? 'Actualizar' : 'Crear' }} Sistema
-                    </button>
-                </div>
-            </form>
+                                <input type="text" formControlName="model" placeholder="Modelo"
+                                    class="w-full h-10 px-3 rounded-lg bg-background border border-input text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all placeholder:text-muted-foreground flex items-center text-sm" />
+
+                                <input type="number" formControlName="powerWatts" placeholder="Watts"
+                                    class="w-full h-10 px-3 rounded-lg bg-background border border-input text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all placeholder:text-muted-foreground flex items-center text-sm" />
+
+                                <input type="number" formControlName="quantity" placeholder="Cantidad"
+                                    class="w-full h-10 px-3 rounded-lg bg-background border border-input text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all placeholder:text-muted-foreground flex items-center text-sm" />
+
+                                <button type="button"
+                                    class="p-2 rounded-lg bg-destructive/10 text-destructive hover:bg-destructive hover:text-destructive-foreground transition-colors flex items-center justify-center"
+                                    (click)="removePanel.emit(i)" title="Eliminar Panel">
+                                    <lucide-icon [name]="X" class="h-4 w-4"></lucide-icon>
+                                </button>
+                            </div>
+                        }
+
+                        <button type="button" (click)="addPanel.emit()"
+                            class="mt-2 h-9 px-3 rounded-lg bg-secondary text-secondary-foreground font-medium text-sm hover:opacity-90 transition-opacity flex items-center justify-center w-full sm:w-auto">Agregar
+                            Panel</button>
+                    </div>
+
+                    <div class="mt-4 text-sm text-muted-foreground">
+                        Potencia total estimada: <strong>{{ totalPowerKw }} kW</strong>
+                    </div>
+
+                    <div class="flex justify-end gap-3 mt-6">
+                        <button type="button" (click)="closeModal.emit()"
+                            class="h-10 px-4 rounded-lg bg-muted text-foreground font-semibold text-sm hover:opacity-90 transition-opacity">
+                            Cancelar
+                        </button>
+                        <button type="submit" [disabled]="systemForm.invalid"
+                            class="h-10 px-4 rounded-lg bg-primary text-primary-foreground font-semibold text-sm hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed">
+                            {{ isEditMode ? 'Actualizar' : 'Crear' }} Sistema
+                        </button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 }
