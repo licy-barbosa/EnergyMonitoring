@@ -19,6 +19,9 @@ namespace EnergyMonitoring.Domain.Entities
         public Guid SolarPlantId { get; private set; }
         public SolarPlant SolarPlant { get; private set; } = default!;
 
+        public int DeviceTypeId { get; private set; }
+        public DeviceType DeviceType { get; set; }
+
         /// <summary>
         /// Device name.
         /// Nombre del dispositivo.
@@ -47,7 +50,7 @@ namespace EnergyMonitoring.Domain.Entities
             string name, 
             string? description, 
             double? ratedPowerWatts, 
-            bool isActive)
+            bool isActive, int deviceTypeId)
         {
             Id = Guid.NewGuid();
             CompanyId = companyId;
@@ -56,9 +59,11 @@ namespace EnergyMonitoring.Domain.Entities
             Description = description;
             RatedPowerWatts = ratedPowerWatts;
             IsActive = isActive;
+            DeviceTypeId = deviceTypeId;
         }
 
-        public void Update(string name, string? description, double? ratedPowerWatts, bool isActive) { 
+        public void Update(string name, string? description, double? ratedPowerWatts, bool isActive, int deviceTypeId) {
+            DeviceTypeId = deviceTypeId;
             Name = name;
             Description = description;
             RatedPowerWatts = ratedPowerWatts;

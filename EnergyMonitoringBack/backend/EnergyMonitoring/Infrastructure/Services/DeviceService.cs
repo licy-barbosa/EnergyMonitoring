@@ -40,6 +40,7 @@ namespace EnergyMonitoring.Infrastructure.Services
                 .Select(x => new DeviceDTO
                 {
                     Id = x.Id,
+                    DeviceTypeId = x.DeviceTypeId,
                     Name = x.Name,
                     Description = x.Description,
                     RatedPowerWatts = x.RatedPowerWatts,
@@ -55,7 +56,7 @@ namespace EnergyMonitoring.Infrastructure.Services
             if(companyId is null)
                 return false;
 
-            var device = new Device(companyId.Value, dto.SolarPlantId, dto.Name, dto.Description, dto.RatedPowerWatts, dto.IsActive);
+            var device = new Device(companyId.Value, dto.SolarPlantId, dto.Name, dto.Description, dto.RatedPowerWatts, dto.IsActive, dto.DeviceTypeId);
 
             await _context.Devices.AddAsync(device);
 
@@ -71,7 +72,7 @@ namespace EnergyMonitoring.Infrastructure.Services
 
             if (entity == null) return false;
 
-            entity.Update(dto.Name, dto.Description, dto.RatedPowerWatts, dto.IsActive);
+            entity.Update(dto.Name, dto.Description, dto.RatedPowerWatts, dto.IsActive, dto.DeviceTypeId);
 
             var result = await _context.SaveChangesAsync();
             return true;

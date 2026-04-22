@@ -22,8 +22,24 @@ namespace Merkcon.Infrastructure.Data.Configurations
             builder.Property(e => e.EnergyKWh)
                 .HasComment("Consumo acumulado");
 
-            builder.Property(e => e.Timestamp)
-                .HasComment("Fecha de medición");
+            builder.Property(e => e.CreatedAt)
+                .IsRequired()
+                .HasComment("Fecha de creación del registro");
+
+            builder.Property(e => e.CreatedBy)
+                .HasMaxLength(450)
+                .IsRequired()
+                .HasComment("Usuario que creó el registro");
+
+            builder.Property(e => e.UpdatedAt)
+                .HasComment("Fecha de última modificación");
+
+            builder.Property(e => e.UpdatedBy)
+                .HasMaxLength(450)
+                .HasComment("Usuario que modificó el registro");
+
+            builder.Property(x => x.Status)
+                .HasConversion<int>();
 
             builder.HasOne(e => e.Device)
                 .WithMany(d => d.Measurements)

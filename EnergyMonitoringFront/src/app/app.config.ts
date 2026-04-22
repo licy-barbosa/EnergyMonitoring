@@ -17,6 +17,8 @@ import {
   provideZoneChangeDetection,
   APP_INITIALIZER,
 } from '@angular/core';
+import { DeviceTypeRepositoryImpl } from '@infrastructure/device-type/device-type.repository.impl';
+import { DEVICE_TYPES_REPOSITORY } from '@domain/device-type/repositories/device-types.repository';
 
 export const appConfig: ApplicationConfig = {
     providers: [
@@ -54,6 +56,11 @@ export const appConfig: ApplicationConfig = {
         {
             provide: DEVICE_REPOSITORY,
             useClass: DeviceRepositoryImpl
+        },
+
+        {
+            provide: DEVICE_TYPES_REPOSITORY,
+            useClass: DeviceTypeRepositoryImpl
         },
 
         SOLAR_PLANT_PROVIDERS,

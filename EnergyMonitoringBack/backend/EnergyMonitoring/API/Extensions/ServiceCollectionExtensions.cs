@@ -1,4 +1,6 @@
-﻿using EnergyMonitoring.Application.Interfaces;
+﻿using EnergyMonitoring.Application.Common.Interfaces;
+using EnergyMonitoring.Application.Common.Services;
+using EnergyMonitoring.Application.Interfaces;
 using EnergyMonitoring.Infrastructure.Identity;
 using EnergyMonitoring.Infrastructure.Services;
 
@@ -19,6 +21,8 @@ namespace EnergyMonitoring.API.Extensions
             services.AddScoped<IEnergyAnalyticsService, EnergyAnalyticsService>();
             services.AddScoped<ICostCalculationService, CostCalculationService>();
             services.AddScoped<ISolarPlantService, SolarPlantService>();
+            services.AddScoped<IMeasurementService, MeasurementService>();
+            services.AddScoped<IDeviceTypeService, DeviceTypeService>();
 
             return services;
         }

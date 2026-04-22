@@ -4,5 +4,6 @@ export interface Device {
     description: string;
     ratedPowerWatts: number;
     isActive: boolean;
-    solarPlantId : string;
+    solarPlantId: string;
+    deviceTypeId: number ;
 }

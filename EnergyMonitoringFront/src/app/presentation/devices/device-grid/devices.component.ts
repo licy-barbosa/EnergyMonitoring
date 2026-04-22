@@ -7,11 +7,14 @@ import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } 
 import { DeviceFacade } from '@application/devices/facades/device.facade';
 import { Device } from '@domain/device/models/device.model';
 import { DeviceModalComponent } from '../device-modal/device-modal.component';
+import { DeviceTypeFacade } from '@application/device-types/facades/device-type.facede';
+import { SelectDeviceType } from '@domain/device-type/models/select-device-type.model';
 
 type DeviceFormGroup = FormGroup<{
     id: FormControl<string | null>;
     name: FormControl<string>;
     description: FormControl<string | null>;
+    deviceTypeId: FormControl<number | null>;
     ratedPowerWatts: FormControl<number | null>;
 }>;
 
@@ -27,6 +30,7 @@ export class DevicesComponent implements OnInit {
     constructor(private route: ActivatedRoute) {}
     private fb = inject(FormBuilder);
     private facade = inject(DeviceFacade);
+    private deviceTypeService = inject(DeviceTypeFacade);
     private router = inject(Router);
 
     readonly Cpu = Cpu;
@@ -42,11 +46,13 @@ export class DevicesComponent implements OnInit {
     selectedId: string | null = null;
     devices$!: Observable<Device[]>;
     plantId: string | null = null;
+    deviceTypes:  SelectDeviceType[] = [];
 
     deviceForm!: FormGroup<{
         name: FormControl<string>;
         description: FormControl<string | null>;
         ratedPowerWatts: FormControl<number | null>;
+        deviceTypeId: FormControl<number | null>;
         isActive: FormControl<boolean>;
     }>;
 
@@ -57,6 +63,7 @@ export class DevicesComponent implements OnInit {
 
         this.buildForm();
         this.loadSystems(this.plantId!);
+        this.loadTypes();
     }
 
     // ===============================
@@ -67,6 +74,7 @@ export class DevicesComponent implements OnInit {
             name: this.fb.nonNullable.control('', Validators.required),
             description: new FormControl<string | null>(null),
             ratedPowerWatts: new FormControl<number | null>(null),
+            deviceTypeId: [0, Validators.required],
             isActive: this.fb.nonNullable.control(true)
         });
     }
@@ -82,6 +90,7 @@ export class DevicesComponent implements OnInit {
             name: '',
             description: '',
             ratedPowerWatts: 0,
+            deviceTypeId: 0,
             isActive: true
         });
 
@@ -104,6 +113,7 @@ export class DevicesComponent implements OnInit {
                 name: device.name,
                 description: device.description,
                 ratedPowerWatts: device.ratedPowerWatts,
+                deviceTypeId: device.deviceTypeId, 
                 isActive: device.isActive
             });
 
@@ -121,7 +131,7 @@ export class DevicesComponent implements OnInit {
             name: form.name,
             description: form.description ?? '',
             ratedPowerWatts: form.ratedPowerWatts ?? 0,
-            //expectedMonthlyKwh: formValue.expectedMonthlyKwh,
+            deviceTypeId: form.deviceTypeId ?? 0,
             isActive: !!form.isActive,
             solarPlantId: this.plantId!
         };
@@ -141,11 +151,27 @@ export class DevicesComponent implements OnInit {
         this.devices$ = this.facade.loadDevices(plantId);
     }
 
+    loadTypes() {
+        this.deviceTypeService.loadDeviceTypes().subscribe(data => {
+            this.deviceTypes = data;
+        });
+    }
+
     // ===============================
     // AFTER SAVE
     // ===============================
     afterSave() {
         this.closeModal();
         this.loadSystems(this.plantId!);
+    }
+
+    onTypeCreated(newType: any) {
+        // 🔥 agregar al select principal
+        this.deviceTypes.push(newType);
+
+        // 🔥 seleccionar automáticamente en el form REAL
+        this.deviceForm.patchValue({
+            deviceTypeId: newType.id
+        });
     }
 }

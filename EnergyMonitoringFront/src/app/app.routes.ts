@@ -1,11 +1,4 @@
 import { Routes } from '@angular/router';
-import { IndexComponent } from './presentation/modules/pacientes/index/index.component';
-import { AddComponent } from './presentation/modules/pacientes/add-pacientes/add-pacientes.component';
-import { FiltroEstudiosComponent } from './presentation/modules/estudios/filter-estudios/filter-estudios.component';
-import { EditPacientesComponent } from './presentation/modules/pacientes/edit-pacientes/edit-pacientes.component';
-import { RegisterComponent } from './presentation/modules/security/register/register.component';
-import { UserIndexComponent } from './presentation/modules/security/user-index/user-index.component';
-import { roleGuard } from '@core/auth';
 import { authGuard } from '@core/auth/guards/auth.guard';
 import { guestGuard } from '@core/auth/guards/guest.guard';
 import { SOLAR_PLANT_PROVIDERS } from '@infrastructure/solar-plant/solar-plant.provider';
@@ -47,9 +40,19 @@ export const routes: Routes = [
             },
 
             {
-                path: 'devices',
-                loadComponent: () => import('@presentation/devices/pages/devices/devices.component').then(c => c.DevicesComponent)
+                path: 'plants/:plantId/devices',
+                loadComponent: () => import('@presentation/devices/device-grid/devices.component').then(c => c.DevicesComponent)
             },
+            {
+                path: 'plants/:plantId/devices/:deviceId/edit',
+                loadComponent: () => import('@presentation/devices/device-grid/devices.component').then(c => c.DevicesComponent)
+            },
+
+            // {
+            //     path: 'devices',
+            //     loadComponent: () => import('@presentation/devices/device-grid/devices.component').then(c => c.DevicesComponent)
+            // },
+
             {
                 path: 'energy-production',
                 loadComponent: () => import('@presentation/energy-production/pages/energy-production/energy-production.component').then(c => c.EnergyProductionComponent)
@@ -110,8 +113,4 @@ export const routes: Routes = [
             import('./presentation/template/not-found/not-found.component')
                 .then(c => c.NotFoundComponent)
     },
-
-
-
-
 ];

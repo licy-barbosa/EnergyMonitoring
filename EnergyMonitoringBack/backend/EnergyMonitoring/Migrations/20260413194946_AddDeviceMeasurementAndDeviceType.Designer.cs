@@ -4,6 +4,7 @@ using Merkcon.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EnergyMonitoring.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260413194946_AddDeviceMeasurementAndDeviceType")]
+    partial class AddDeviceMeasurementAndDeviceType
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -183,9 +186,6 @@ namespace EnergyMonitoring.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<Guid>("CompanyId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<decimal>("MaxCurrent")
                         .HasColumnType("decimal(18,2)");
 
@@ -210,9 +210,7 @@ namespace EnergyMonitoring.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CompanyId");
-
-                    b.ToTable("DeviceTypes");
+                    b.ToTable("DeviceType");
                 });
 
             modelBuilder.Entity("EnergyMonitoring.Domain.Entities.EnergyBalance", b =>
@@ -694,17 +692,6 @@ namespace EnergyMonitoring.Migrations
                         .IsRequired();
 
                     b.Navigation("Device");
-                });
-
-            modelBuilder.Entity("EnergyMonitoring.Domain.Entities.DeviceType", b =>
-                {
-                    b.HasOne("EnergyMonitoring.Domain.Entities.Company", "Company")
-                        .WithMany()
-                        .HasForeignKey("CompanyId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Company");
                 });
 
             modelBuilder.Entity("EnergyMonitoring.Domain.Entities.EnergyBalance", b =>

@@ -31,6 +31,7 @@ namespace Merkcon.Infrastructure.Data
         // Devices
         // =============================
         public DbSet<Device> Devices => Set<Device>();
+        public DbSet<DeviceType> DeviceTypes => Set<DeviceType>();
         public DbSet<DeviceMeasurement> DeviceMeasurements => Set<DeviceMeasurement>();
 
         // =============================

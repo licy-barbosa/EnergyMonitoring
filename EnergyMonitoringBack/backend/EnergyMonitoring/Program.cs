@@ -1,4 +1,5 @@
-﻿using EnergyMonitoring.API.Extensions;
+﻿using EnergyMonitoring.Application.DeviceMeasurements.Commands;
+using EnergyMonitoring.API.Extensions;
 using EnergyMonitoring.Domain.Entities;
 using EnergyMonitoring.Infrastructure.Identity;
 using Merkcon.Infrastructure.Data;
@@ -49,6 +50,9 @@ builder.Services.AddSwaggerGen(options =>
 
 builder.Services.AddJwtAuthentication(builder.Configuration);
 builder.Services.AddApplicationServices();
+
+builder.Services.AddMediatR(cfg =>
+    cfg.RegisterServicesFromAssembly(typeof(CreateDeviceMeasurementCommand).Assembly));
 
 var app = builder.Build();
 

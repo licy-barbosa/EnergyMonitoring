@@ -4,6 +4,7 @@ using Merkcon.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EnergyMonitoring.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260411005838_UpdateDeviceMeasurements")]
+    partial class UpdateDeviceMeasurements
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -77,9 +80,6 @@ namespace EnergyMonitoring.Migrations
                         .HasColumnType("nvarchar(300)")
                         .HasComment("Descripción");
 
-                    b.Property<int>("DeviceTypeId")
-                        .HasColumnType("int");
-
                     b.Property<bool>("IsActive")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bit")
@@ -110,8 +110,6 @@ namespace EnergyMonitoring.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("CompanyId");
-
-                    b.HasIndex("DeviceTypeId");
 
                     b.HasIndex("SolarPlantId");
 
@@ -173,46 +171,6 @@ namespace EnergyMonitoring.Migrations
                     b.HasIndex("DeviceId");
 
                     b.ToTable("DeviceMeasurements");
-                });
-
-            modelBuilder.Entity("EnergyMonitoring.Domain.Entities.DeviceType", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<Guid>("CompanyId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<decimal>("MaxCurrent")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("MaxPowerWatts")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("MaxVoltage")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("MinCurrent")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("MinPowerWatts")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("MinVoltage")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CompanyId");
-
-                    b.ToTable("DeviceTypes");
                 });
 
             modelBuilder.Entity("EnergyMonitoring.Domain.Entities.EnergyBalance", b =>
@@ -668,19 +626,11 @@ namespace EnergyMonitoring.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("EnergyMonitoring.Domain.Entities.DeviceType", "DeviceType")
-                        .WithMany()
-                        .HasForeignKey("DeviceTypeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("EnergyMonitoring.Domain.Entities.SolarPlant", "SolarPlant")
                         .WithMany("Devices")
                         .HasForeignKey("SolarPlantId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("DeviceType");
 
                     b.Navigation("SolarPlant");
                 });
@@ -694,17 +644,6 @@ namespace EnergyMonitoring.Migrations
                         .IsRequired();
 
                     b.Navigation("Device");
-                });
-
-            modelBuilder.Entity("EnergyMonitoring.Domain.Entities.DeviceType", b =>
-                {
-                    b.HasOne("EnergyMonitoring.Domain.Entities.Company", "Company")
-                        .WithMany()
-                        .HasForeignKey("CompanyId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Company");
                 });
 
             modelBuilder.Entity("EnergyMonitoring.Domain.Entities.EnergyBalance", b =>
